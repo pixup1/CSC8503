@@ -1,0 +1,3 @@
+C:/CSC8503/out/build/x64-release/CMakeFiles/CMakeScratch/TryCompile-qkioi6/CMakeFiles/cmTC_e449f.dir
+C:/CSC8503/out/build/x64-release/CMakeFiles/CMakeScratch/TryCompile-qkioi6/CMakeFiles/edit_cache.dir
+C:/CSC8503/out/build/x64-release/CMakeFiles/CMakeScratch/TryCompile-qkioi6/CMakeFiles/rebuild_cache.dir
