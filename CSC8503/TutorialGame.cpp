@@ -14,13 +14,13 @@ using namespace NCL;
 using namespace CSC8503;
 
 TutorialGame::TutorialGame(GameWorld& inWorld, GameTechRendererInterface& inRenderer, PhysicsSystem& inPhysics, Controller& gameController)
-	: world(inWorld), 
-	  renderer(inRenderer),
-	  physics(inPhysics),
-	  controller(gameController)
+	: world(inWorld),
+	renderer(inRenderer),
+	physics(inPhysics),
+	controller(gameController)
 {
-	forceMagnitude	= 10.0f;
-	useGravity		= false;
+	forceMagnitude = 10.0f;
+	useGravity = false;
 	inSelectionMode = false;
 
 	world.GetMainCamera().SetController(controller);
@@ -28,32 +28,32 @@ TutorialGame::TutorialGame(GameWorld& inWorld, GameTechRendererInterface& inRend
 	world.SetSunPosition({ -200.0f, 60.0f, -200.0f });
 	world.SetSunColour({ 0.8f, 0.8f, 0.5f });
 
-	cubeMesh	= renderer.LoadMesh("cube.msh");
-	sphereMesh	= renderer.LoadMesh("sphere.msh");
+	cubeMesh = renderer.LoadMesh("cube.msh");
+	sphereMesh = renderer.LoadMesh("sphere.msh");
 	capsuleMesh = renderer.LoadMesh("capsule.msh");
 
-	defaultTex	= renderer.LoadTexture("Default.png");
-	checkerTex	= renderer.LoadTexture("checkerboard.png");
-	glassTex	= renderer.LoadTexture("stainedglass.png");
+	defaultTex = renderer.LoadTexture("Default.png");
+	checkerTex = renderer.LoadTexture("checkerboard.png");
+	glassTex = renderer.LoadTexture("stainedglass.png");
 
 
 	renderer.LoadGLTF("CesiumMan/CesiumMan.glTF", playerChar);
 	renderer.LoadGLTF("CesiumMilkTruck/CesiumMilkTruck.glTF", playerVehicle);
 
 	renderer.LoadGLTF("car/sportcar.017.gltf", enemyVehicle);
-	enemyMesh	= renderer.LoadMesh("Role_T.msh");
-	enemyAnim	=	 new MeshAnimation("Role_T.anm");
+	enemyMesh = renderer.LoadMesh("Role_T.msh");
+	enemyAnim = new MeshAnimation("Role_T.anm");
 
 
 	renderer.LoadGLTF("car/sportcar.017.gltf", enemyVehicle);
 
-	checkerMaterial.type		= MaterialType::Opaque;
-	checkerMaterial.diffuseTex	= checkerTex;
+	checkerMaterial.type = MaterialType::Opaque;
+	checkerMaterial.diffuseTex = checkerTex;
 
-	glassMaterial.type			= MaterialType::Transparent;
-	glassMaterial.diffuseTex	= glassTex;
+	glassMaterial.type = MaterialType::Transparent;
+	glassMaterial.diffuseTex = glassTex;
 
-	enemyMaterial.type			= MaterialType::Opaque;
+	enemyMaterial.type = MaterialType::Opaque;
 	//enemyMaterial.diffuseTex	= glassTex;
 
 	enemyMaterial.meshLayers.push_back(
@@ -61,27 +61,27 @@ TutorialGame::TutorialGame(GameWorld& inWorld, GameTechRendererInterface& inRend
 			.type = MaterialType::Opaque,
 			.diffuseTex = renderer.LoadTexture("/RealisticCharacter/role/hair.tga"),
 		}
-	);
+		);
 	enemyMaterial.meshLayers.push_back(
 		{
 			.type = MaterialType::Opaque,
 			.diffuseTex = renderer.LoadTexture("/RealisticCharacter/role/head.tga"),
 		}
-	);
+		);
 
 	enemyMaterial.meshLayers.push_back(
 		{
 			.type = MaterialType::Opaque,
 			.diffuseTex = renderer.LoadTexture("/RealisticCharacter/role/Body.tga"),
 		}
-	);
+		);
 
 	enemyMaterial.meshLayers.push_back(
 		{
 			.type = MaterialType::Opaque,
 			.diffuseTex = renderer.LoadTexture("/RealisticCharacter/weapon/weapon.tga"),
 		}
-	);
+		);
 
 	InitCamera();
 	InitWorld();
@@ -89,12 +89,12 @@ TutorialGame::TutorialGame(GameWorld& inWorld, GameTechRendererInterface& inRend
 
 /*
 
-Each of the little demo scenarios used in the game uses the same 2 meshes, 
+Each of the little demo scenarios used in the game uses the same 2 meshes,
 and the same texture and shader. There's no need to ever load in anything else
 for this module, even in the coursework, but you can add it if you like!
 
 */
-TutorialGame::~TutorialGame()	{
+TutorialGame::~TutorialGame() {
 	delete cubeMesh;
 	delete sphereMesh;
 
@@ -109,7 +109,7 @@ void TutorialGame::UpdateGame(float dt) {
 		Vector3 objPos = lockedObject->GetTransform().GetPosition();
 		Vector3 camPos = objPos + lockedOffset;
 
-		Matrix4 temp = Matrix::View(camPos, objPos, Vector3(0,1,0));
+		Matrix4 temp = Matrix::View(camPos, objPos, Vector3(0, 1, 0));
 
 		Matrix4 modelMat = Matrix::Inverse(temp);
 
@@ -225,8 +225,8 @@ void TutorialGame::UpdateKeys() {
 }
 
 void TutorialGame::LockedObjectMovement() {
-	Matrix4 view		= world.GetMainCamera().BuildViewMatrix();
-	Matrix4 camWorld	= Matrix::Inverse(view);
+	Matrix4 view = world.GetMainCamera().BuildViewMatrix();
+	Matrix4 camWorld = Matrix::Inverse(view);
 
 	Vector3 rightAxis = Vector3(camWorld.GetColumn(0)); //view is inverse of model!
 
@@ -247,12 +247,12 @@ void TutorialGame::LockedObjectMovement() {
 	}
 
 	if (Window::GetKeyboard()->KeyDown(KeyCodes::NEXT)) {
-		selectionObject->GetPhysicsObject()->AddForce(Vector3(0,-10,0));
+		selectionObject->GetPhysicsObject()->AddForce(Vector3(0, -10, 0));
 	}
 }
 
 void TutorialGame::DebugObjectMovement() {
-//If we've selected an object, we can manipulate it with some key presses
+	//If we've selected an object, we can manipulate it with some key presses
 	if (inSelectionMode && selectionObject) {
 		//Twist the selected object!
 		if (Window::GetKeyboard()->KeyDown(KeyCodes::LEFT)) {
@@ -304,8 +304,8 @@ void TutorialGame::InitWorld() {
 
 	//InitMixedGridWorld(10, 10, 3.5f, 3.5f);
 
-	InitGameExamples();	
-	InitDefaultFloor();	
+	InitGameExamples();
+	InitDefaultFloor();
 }
 
 /*
@@ -337,7 +337,7 @@ GameObject* TutorialGame::AddFloorToWorld(const Vector3& position) {
 /*
 
 Builds a game object that uses a sphere mesh for its graphics, and a bounding sphere for its
-rigid body representation. This and the cube function will let you build a lot of 'simple' 
+rigid body representation. This and the cube function will let you build a lot of 'simple'
 physics worlds. You'll probably need another function for the creation of OBB cubes too.
 
 */
@@ -577,8 +577,8 @@ void TutorialGame::ObjectTest() {
 }
 
 void TutorialGame::InitCubeGridWorld(int numRows, int numCols, float rowSpacing, float colSpacing, const Vector3& cubeDims) {
-	for (int x = 1; x < numCols+1; ++x) {
-		for (int z = 1; z < numRows+1; ++z) {
+	for (int x = 1; x < numCols + 1; ++x) {
+		for (int z = 1; z < numRows + 1; ++z) {
 			Vector3 position = Vector3(x * colSpacing, 10.0f, z * rowSpacing);
 			AddCubeToWorld(position, cubeDims, 1.0f);
 		}
@@ -587,9 +587,9 @@ void TutorialGame::InitCubeGridWorld(int numRows, int numCols, float rowSpacing,
 
 /*
 Every frame, this code will let you perform a raycast, to see if there's an object
-underneath the cursor, and if so 'select it' into a pointer, so that it can be 
+underneath the cursor, and if so 'select it' into a pointer, so that it can be
 manipulated later. Pressing Q will let you toggle between this behaviour and instead
-letting you move the camera around. 
+letting you move the camera around.
 
 */
 bool TutorialGame::SelectObject() {
@@ -664,7 +664,9 @@ void TutorialGame::MoveSelectedObject() {
 		RayCollision closestCollision;
 		if (world.Raycast(ray, closestCollision, true)) {
 			if (closestCollision.node == selectionObject) {
-				selectionObject->GetPhysicsObject()->AddForceAtPosition(ray.GetDirection() * forceMagnitude, closestCollision.collidedAt);
+				selectionObject->GetPhysicsObject()->AddForceAtPosition(
+					ray.GetDirection() * forceMagnitude,
+					closestCollision.collidedAt);
 			}
 		}
 	}
